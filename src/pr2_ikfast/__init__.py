@@ -1,4 +1,3 @@
-import numpy as np
 from pr2_ikfast.ikLeft import leftIK
 from pr2_ikfast.ikRight import rightIK
 from typing import List
