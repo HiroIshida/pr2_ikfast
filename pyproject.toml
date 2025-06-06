@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pr2_ikfast"
+version = "0.0.1"
+description = "Python bindings for the PR2 IKFast library"
+requires-python = ">=3.8"
+
+[tool.setuptools]
+ext-modules = [
+    {name = "pr2_ikfast.ikLeft", sources = ["src/cpp/left_arm_ik.cpp"]},
+    {name = "pr2_ikfast.ikRight", sources = ["src/cpp/right_arm_ik.cpp"]}
+]
