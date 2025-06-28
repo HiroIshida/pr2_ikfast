@@ -11,6 +11,6 @@ dependencies = ["numpy"]
 
 [tool.setuptools]
 ext-modules = [
-    {name = "pr2_ikfast.ikLeft", sources = ["src/cpp/left_arm_ik.cpp"]},
-    {name = "pr2_ikfast.ikRight", sources = ["src/cpp/right_arm_ik.cpp"]}
+    {name = "pr2_ikfast.ikLeft", sources = ["src/cpp/left_arm_ik.cpp"], include-dirs = ["src/cpp"]},
+    {name = "pr2_ikfast.ikRight", sources = ["src/cpp/right_arm_ik.cpp"], include-dirs = ["src/cpp"]}
 ]

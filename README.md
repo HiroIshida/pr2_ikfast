@@ -3,7 +3,7 @@ cpp codes are fetched from https://github.com/caelan/pybullet-planning (MIT Lice
 
 ## Installation
 ```bash
-pip install .
+pip install pr2-ikfast
 ```
 
 ## Usage
