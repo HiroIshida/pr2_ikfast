@@ -20,10 +20,10 @@ def solve_right_ik(trans: List[float], rot: List[float], free_vals: List[float])
 
 
 @dataclass
-class UnoformSampler:
+class UniformSampler:
     n_size: int = 72
-    lb: float = 0.5 * -np.pi
-    ub: float = 0.5 * np.pi
+    lb: float = -np.pi
+    ub: float = np.pi
 
     def __call__(self) -> np.ndarray:
         return np.random.uniform(self.lb, self.ub, size=(self.n_size,))
@@ -41,12 +41,14 @@ def solve_ik(
     ) -> Optional[np.ndarray]:
 
     if sampler is None:
-        sampler = UnoformSampler()
+        sampler = UniformSampler()
     fn = solve_right_ik if is_rarm else solve_left_ik
     upper_arm_roll_joint_vals = sampler()
     for val2 in upper_arm_roll_joint_vals:
         free_vals = [torso_value, val2]
         retall = fn(trans, rot, free_vals)
+        if retall is None:
+            continue
         if lb is not None and ub is not None:
             for ret in retall:
                 if np.all(ret[1:] >= lb) and np.all(ret[1:] <= ub):
