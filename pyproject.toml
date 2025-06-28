@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pr2_ikfast"
-version = "0.0.1"
+version = "0.0.2"
 description = "Python bindings for the PR2 IKFast library"
 requires-python = ">=3.8"
 dependencies = ["numpy"]
