@@ -37,7 +37,9 @@ def solve_ik(
     lb: Optional[np.ndarray],
     ub: Optional[np.ndarray],
     sampler: Optional[Callable[[], np.ndarray]] = None,
-) -> List[float]:
+    predicate: Optional[Callable[[np.ndarray], bool]] = None,
+    ) -> Optional[np.ndarray]:
+
     if sampler is None:
         sampler = UnoformSampler()
     fn = solve_right_ik if is_rarm else solve_left_ik
@@ -48,4 +50,6 @@ def solve_ik(
         if lb is not None and ub is not None:
             for ret in retall:
                 if np.all(ret[1:] >= lb) and np.all(ret[1:] <= ub):
-                    return ret[1:]
+                    if predicate is None or predicate(ret[1:]):
+                        return ret[1:]
+    return None
