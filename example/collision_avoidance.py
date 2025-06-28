@@ -2,23 +2,14 @@ from plainmp.robot_spec import PR2RarmSpec
 from plainmp.utils import primitive_to_plainmp_sdf
 import time
 import numpy as np
-from pr2_ikfast import solve_ik
+from pr2_ikfast import sample_ik_solution
 from skrobot.models.pr2 import PR2
 from skrobot.model.primitives import Box
 from skrobot.viewers import TrimeshSceneViewer
 
 torso_angle = 0.1
-pr2 = PR2()
+pr2 = PR2(use_tight_joint_limit=False)
 pr2.reset_pose()
-joints = [
-    pr2.r_shoulder_pan_joint,
-    pr2.r_shoulder_lift_joint,
-    pr2.r_upper_arm_roll_joint,
-    pr2.r_elbow_flex_joint,
-    pr2.r_forearm_roll_joint,
-    pr2.r_wrist_flex_joint,
-    pr2.r_wrist_roll_joint,
-]
 pr2.torso_lift_joint.joint_angle(torso_angle)
 
 obstacle = Box([0.3, 0.3, 0.3])
@@ -38,9 +29,13 @@ v.show()
 
 for _ in range(1000):
     ts = time.time()
-    ret = solve_ik([0.6, -0.2, 0.8], np.eye(3).tolist(), torso_angle, True, lb, ub, predicate = lambda x: ineq_cst.is_valid(x))
+    for sol in sample_ik_solution([0.6, -0.2, 0.8], np.eye(3).tolist(), torso_angle, True):
+        if not (np.all(sol >= lb) and np.all(sol <= ub)):
+            continue
+        if ineq_cst.is_valid(sol):
+            print("found solution")
+            break
     print(f"ikfast with plainmp collision avoidance took {time.time() - ts:.4f} seconds")
-    for joint, angle in zip(joints, ret):
-        joint.joint_angle(angle)
+    spec.set_skrobot_model_state(pr2, sol)
     v.redraw()
     input("Press Enter to continue...")
