@@ -14,4 +14,4 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: pip install .
       - run: pip install numpy
-      - run: python example/main.py
+      - run: python example/bench.py
