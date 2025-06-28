@@ -40,13 +40,16 @@ def solve_ik(
     predicate: Optional[Callable[[np.ndarray], bool]] = None,
     ) -> Optional[np.ndarray]:
 
+    # use -0.051, because original cpp code is compiled wrt baes_footprint
+    trans_modif = [trans[0], trans[1], trans[2] - 0.051]
+
     if sampler is None:
         sampler = UniformSampler()
     fn = solve_right_ik if is_rarm else solve_left_ik
     upper_arm_roll_joint_vals = sampler()
     for val2 in upper_arm_roll_joint_vals:
         free_vals = [torso_value, val2]
-        retall = fn(trans, rot, free_vals)
+        retall = fn(trans_modif, rot, free_vals)
         if retall is None:
             continue
         if lb is not None and ub is not None:
