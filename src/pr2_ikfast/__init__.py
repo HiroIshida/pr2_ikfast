@@ -36,6 +36,7 @@ def sample_ik_solution(
     torso_value: float,
     is_rarm: bool,
     sampler: Optional[Callable[[], Iterator[float]]] = None,
+    batch: bool = False
     ) -> Generator[np.ndarray, None, None]:
 
     # use -0.051, because original cpp code is compiled wrt baes_footprint
@@ -49,5 +50,8 @@ def sample_ik_solution(
         retall = fn(trans_modif, rot, free_vals)
         if retall is None:
             continue
-        for ret in retall:
-            yield ret[1:]
+        if batch:
+            yield np.array([ret[1:] for ret in retall])
+        else:
+            for ret in retall:
+                yield ret[1:]
